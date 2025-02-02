@@ -24,17 +24,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
-          cache: 'yarn'
+          node-version: '20'
+          cache: 'pnpm'
 
       - name: Install Dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: Build Project
-        run: yarn build
+        run: pnpm build
 
       - name: Run BundleMon Analysis
-        run: yarn bundlemon
+        run: pnpm bundlemon
         env:
           BUNDLEMON_PROJECT_ID: ${{ secrets.BUNDLEMON_PROJECT_ID }}
           BUNDLEMON_PROJECT_APIKEY: ${{ secrets.BUNDLEMON_PROJECT_APIKEY }}
