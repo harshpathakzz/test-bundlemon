@@ -41,5 +41,5 @@ jobs:
         run: pnpm bundlemon
         env:
           BUNDLEMON_PROJECT_ID: ${{ secrets.BUNDLEMON_PROJECT_ID }}
-          BUNDLEMON_PROJECT_TOKEN: ${{ secrets.BUNDLEMON_PROJECT_TOKEN }}
+          BUNDLEMON_PROJECT_APIKEY : ${{ secrets.BUNDLEMON_PROJECT_APIKEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
