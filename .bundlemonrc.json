@@ -2,22 +2,43 @@
     "baseDir": ".next",
     "files": [
       {
-        "path": "static/chunks/**/*.js",
+        "path": "static/chunks/*.<hash>.js",
         "maxSize": "100kb"
       },
       {
-        "path": "static/css/**/*.css",
+        "path": "static/chunks/app/*.<hash>.js",
+        "maxSize": "100kb"
+      },
+      {
+        "path": "static/chunks/pages/*.<hash>.js",
+        "maxSize": "100kb"
+      },
+      {
+        "path": "static/css/*.<hash>.css",
         "maxSize": "20kb"
+      },
+      {
+        "path": "static/media/*.<hash>.*",
+        "maxSize": "100kb"
       }
     ],
     "groups": [
       {
-        "path": "**/*.js",
+        "path": "**/*.<hash>.js",
         "maxSize": "400kb"
       }
     ],
     "notifications": {
       "github": true
     },
-    "reportOutput": ["github"]
+    "reportOutput": [
+      [
+        "github",
+        {
+          "checkRun": false,
+          "commitStatus": true,
+          "prComment": true
+        }
+      ]
+    ]
   }
