@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BUNDLEMON_PROJECT_ID: ${{ secrets.BUNDLEMON_PROJECT_ID }}
-      BUNDLEMON_PROJECT_TOKEN: ${{ secrets.BUNDLEMON_PROJECT_TOKEN }}
+      BUNDLEMON_PROJECT_APIKEY: ${{ secrets.BUNDLEMON_PROJECT_APIKEY }}
     steps:
       - uses: actions/checkout@v3
         with:
