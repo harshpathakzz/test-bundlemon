@@ -1,45 +1,53 @@
-name: BundleMon
+name: Monitor Bundle Size with BundleMon
 
 on:
-  push:
-    branches: [main]
   pull_request:
-    types: [synchronize, opened, reopened]
-
-permissions:
-  contents: read
-  pull-requests: write
-  checks: write
-  statuses: write
+    branches:
+      - main
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
+  monitor_bundle_size:
+    name: Monitor Bundle Size
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: latest
 
-      - name: Setup Node.js
+    env:
+      BUNDLEMON_PROJECT_ID: ${{ secrets.BUNDLEMON_PROJECT_ID }}
+      BUNDLEMON_PROJECT_APIKEY: ${{ secrets.BUNDLEMON_PROJECT_APIKEY }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: '14'
+          cache: 'yarn'
 
-      - name: Install dependencies
-        run: pnpm install
+      - name: Install Dependencies
+        run: yarn install
 
-      - name: Build
-        run: pnpm build
+      - name: Build Project
+        run: yarn build
 
-      - name: Run BundleMon
-        run: pnpm bundlemon
+      - name: Run BundleMon Analysis
+        run: yarn bundlemon
         env:
           BUNDLEMON_PROJECT_ID: ${{ secrets.BUNDLEMON_PROJECT_ID }}
-          BUNDLEMON_PROJECT_APIKEY : ${{ secrets.BUNDLEMON_PROJECT_APIKEY }}
+          BUNDLEMON_PROJECT_APIKEY: ${{ secrets.BUNDLEMON_PROJECT_APIKEY }}
+
+      - name: Deploy (if on main)
+        if: github.ref == 'refs/heads/main'
+        run: echo "Deploying application..."
+
+      - name: Comment on PR with BundleMon Report
+        if: github.event_name == 'pull_request'
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Adding PR comment with BundleMon report"
+          # You can enhance this step to parse and format a BundleMon report into a GitHub PR comment.
+          echo "**BundleMon Results:** See GitHub status for detailed bundle size information."
