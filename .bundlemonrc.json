@@ -1,0 +1,23 @@
+{
+    "baseDir": ".next",
+    "files": [
+      {
+        "path": "static/chunks/**/*.js",
+        "maxSize": "100kb"
+      },
+      {
+        "path": "static/css/**/*.css",
+        "maxSize": "20kb"
+      }
+    ],
+    "groups": [
+      {
+        "path": "**/*.js",
+        "maxSize": "400kb"
+      }
+    ],
+    "notifications": {
+      "github": true
+    },
+    "reportOutput": ["github"]
+  }
