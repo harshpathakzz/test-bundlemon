@@ -6,25 +6,24 @@ on:
   pull_request:
     types: [synchronize, opened, reopened]
 
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+  statuses: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      BUNDLEMON_PROJECT_ID: ${{ secrets.BUNDLEMON_PROJECT_ID }}
-      BUNDLEMON_PROJECT_APIKEY: ${{ secrets.BUNDLEMON_PROJECT_APIKEY }}
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Important for comparison with base branch
+          fetch-depth: 0
       
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: latest
-      - name: Debug
-        run: |
-            if [ -n "$BUNDLEMON_PROJECT_ID" ]; then echo "BUNDLEMON_PROJECT_ID is set"; else echo "BUNDLEMON_PROJECT_ID is not set"; fi
-            if [ -n "$BUNDLEMON_PROJECT_TOKEN" ]; then echo "BUNDLEMON_PROJECT_TOKEN is set"; else echo "BUNDLEMON_PROJECT_TOKEN is not set"; fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -38,7 +37,9 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: BundleMon
-        run: pnpm bundlemon
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run BundleMon
+        uses: bundlemon/bundlemon-action@v1
+        with:
+          project-id: ${{ secrets.BUNDLEMON_PROJECT_ID }}
+          token: ${{ secrets.BUNDLEMON_PROJECT_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
