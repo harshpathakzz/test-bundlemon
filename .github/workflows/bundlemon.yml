@@ -9,13 +9,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      BUNDLEMON_PROJECT_ID: ${{ secrets.BUNDLEMON_PROJECT_ID }}
+      BUNDLEMON_PROJECT_TOKEN: ${{ secrets.BUNDLEMON_PROJECT_TOKEN }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Important for comparison with base branch
       
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: latest
+      - name: Debug
+        run: |
+            if [ -n "$BUNDLEMON_PROJECT_ID" ]; then echo "BUNDLEMON_PROJECT_ID is set"; else echo "BUNDLEMON_PROJECT_ID is not set"; fi
+            if [ -n "$BUNDLEMON_PROJECT_TOKEN" ]; then echo "BUNDLEMON_PROJECT_TOKEN is set"; else echo "BUNDLEMON_PROJECT_TOKEN is not set"; fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -30,8 +39,6 @@ jobs:
         run: pnpm build
 
       - name: BundleMon
-        uses: lironer/bundlemon-action@v1
+        run: pnpm bundlemon
         env:
-          BUNDLEMON_PROJECT_ID: ${{ secrets.BUNDLEMON_PROJECT_ID }}
-          BUNDLEMON_PROJECT_TOKEN: ${{ secrets.BUNDLEMON_PROJECT_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
